@@ -1,6 +1,11 @@
 import pygame, sys, random
-import RPi.GPIO as GPIO
 from enum import Enum
+
+if sys.platform == "linux":
+    # I don't use Linux except on the Rpi, so this check is enough in my case
+    from RPi.GPIO import GPIO
+else:
+    import Mock.GPIO as GPIO
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 480
