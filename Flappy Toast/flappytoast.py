@@ -1,10 +1,12 @@
 import pygame, sys, random
+import RPi.GPIO as GPIO
 from enum import Enum
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 480
 GROUND_OFFSET = 62
 FLOOR_POS = WINDOW_HEIGHT - GROUND_OFFSET
+BUTTON_PIN = 37
 
 class GameState(Enum):
     IDLE = "idle"
@@ -88,11 +90,24 @@ def update_score(score, high_score, pipes):
     
     return score, high_score
 
+def check_button():
+    global button_state
+    new_state = not GPIO.input(BUTTON_PIN) # Active low, so we invert it
+    if button_state != new_state:
+        button_state = new_state
+        if button_state:
+            pygame.event.post(pygame.event.Event(BUTTONPRESS))
+
 pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=512)
 pygame.init()
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), vsync=1)
 clock = pygame.time.Clock()
-game_font = pygame.font.Font("04B_19.ttf",40)
+game_font = pygame.font.Font("04B_19.TTF",40)
+
+# Hardware setup
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+button_state = False
 
 # Game Variables
 gravity = 0.5
@@ -119,7 +134,8 @@ bird_index = 0
 bird_surface = bird_frames[bird_index]
 bird_rect = bird_surface.get_rect(center=(100,WINDOW_HEIGHT/2))
 
-BIRDFLAP = pygame.USEREVENT + 1
+BUTTONPRESS = pygame.USEREVENT + 1
+BIRDFLAP = pygame.USEREVENT + 2
 pygame.time.set_timer(BIRDFLAP, 200)
 
 pipe_surface = pygame.image.load("sprites/pipe-green.png").convert()
@@ -137,6 +153,8 @@ death_sound = pygame.mixer.Sound("audio/hit.wav")
 score_sound = pygame.mixer.Sound("audio/point.wav")
 
 while True:
+    check_button()
+    
     if disable_timer > 0:
         disable_timer -= 1
 
@@ -144,8 +162,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if disable_timer <= 0 and event.key == pygame.K_SPACE:
+        if event.type == pygame.KEYDOWN or event.type == BUTTONPRESS:
+            if disable_timer <= 0:
                 if game_state != GameState.RUNNING:
                     game_state = GameState.RUNNING
                     pipe_list = []
