@@ -1,4 +1,5 @@
 import pygame, random
+from utils import *
 from enum import Enum
 from toasterio import IOEvents
 from constants import Window, Events
@@ -7,15 +8,11 @@ from gamescreen import GameScreenInterface
 class FlappyToastScreen(GameScreenInterface):
     GROUND_OFFSET = 124
     FLOOR_POS = Window.HEIGHT - GROUND_OFFSET
-    BUTTON_PIN = 37
     
     class GameState(Enum):
         IDLE = "idle"
         RUNNING = "running"
         GAME_OVER = "game_over"
-
-    def loadAndScale(self, resource):
-        return pygame.transform.scale2x(pygame.image.load(resource).convert_alpha())
 
     def create_pipe(self):
         if not self.game_state == self.GameState.RUNNING:
@@ -95,7 +92,7 @@ class FlappyToastScreen(GameScreenInterface):
         return score, high_score
 
     def init(self):
-        self.game_font = pygame.font.Font("./04B_19.TTF",40)
+        self.game_font = pygame.font.Font("./04B_19.TTF", 40)
 
         # Game Variables
         self.gravity = 0.5
@@ -109,20 +106,20 @@ class FlappyToastScreen(GameScreenInterface):
         self.disable_timer = 0
 
         # Surfaces
-        self.bg_surface = pygame.transform.scale2x(pygame.image.load("sprites/background-day.png").convert())
+        self.bg_surface = loadAndScale("sprites/background-day.png")
 
-        self.floor_surface = pygame.transform.scale2x(pygame.image.load("sprites/base.png").convert())
+        self.floor_surface = loadAndScale("sprites/base.png")
         self.floor_x_pos = 0
-
-        bird_downflap = self.loadAndScale("sprites/bluebird-downflap.png")
-        bird_midflap = self.loadAndScale("sprites/bluebird-midflap.png")
-        bird_upflap = self.loadAndScale("sprites/bluebird-upflap.png")
+ 
+        bird_downflap = loadAndScale("sprites/bluebird-downflap.png", True)
+        bird_midflap = loadAndScale("sprites/bluebird-midflap.png", True)
+        bird_upflap = loadAndScale("sprites/bluebird-upflap.png", True)
         self.bird_frames = [bird_downflap, bird_midflap, bird_upflap]
         self.bird_index = 0
         self.bird_surface = self.bird_frames[self.bird_index]
         self.bird_rect = self.bird_surface.get_rect(center=(100,Window.HEIGHT/2))
 
-        self.pipe_surface = pygame.transform.scale2x(pygame.image.load("sprites/pipe-green.png").convert())
+        self.pipe_surface = loadAndScale("sprites/pipe-green.png")
         self.flip_pipe_surface = pygame.transform.flip(self.pipe_surface, False, True)
         self.pipe_list = []
         self.SPAWNPIPE = Events.FLAPPY_TOAST
@@ -133,12 +130,12 @@ class FlappyToastScreen(GameScreenInterface):
         self.BIRDFLAP = Events.FLAPPY_TOAST + 2
         pygame.time.set_timer(self.BIRDFLAP, 200)
 
-        self.game_over_surface = self.loadAndScale(("sprites/message.png"))
+        self.game_over_surface = loadAndScale("sprites/message.png", True)
         self.game_over_rect = self.game_over_surface.get_rect(center = (Window.WIDTH/2,Window.HEIGHT/2))
 
-        self.flap_sound = pygame.mixer.Sound("audio/wing.wav")
-        self.death_sound = pygame.mixer.Sound("audio/hit.wav")
-        self.score_sound = pygame.mixer.Sound("audio/point.wav")
+        self.flap_sound = loadSound("audio/wing.wav")
+        self.death_sound = loadSound("audio/hit.wav")
+        self.score_sound = loadSound("audio/point.wav")
 
     def tick(self, screen, events):
         if self.disable_timer > 0:
