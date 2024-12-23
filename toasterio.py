@@ -4,7 +4,7 @@ from enum import Enum
 IS_RPI = sys.platform == "linux"
 if IS_RPI:
     # I don't use Linux except on the Rpi, so this check is enough in my case
-    from RPi.GPIO import GPIO
+    from RPi import GPIO
 else:
     import Mock.GPIO as GPIO
 
