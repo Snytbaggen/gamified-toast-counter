@@ -8,7 +8,7 @@ if IS_RPI:
 else:
     import Mock.GPIO as GPIO
 
-class IOEvents(Enum):
+class IOEvents():
     EVENT_BUTTON_PRESS = pygame.USEREVENT + 1
 
 BUTTON_PIN = 37
@@ -19,7 +19,7 @@ def init():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-def check_button():
+def read_button():
     global button_state
     new_state = not GPIO.input(BUTTON_PIN) # Active low, so we invert it
     if button_state != new_state:

@@ -20,6 +20,7 @@ bird.init()
 activeScreen = start
 
 while True:
+    io.read_button()
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
