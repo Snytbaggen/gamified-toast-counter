@@ -7,7 +7,8 @@ from MainMenu.startscreen import StartScreen
 pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=512)
 print("Initializing pygame")
 pygame.init()
-screen = pygame.display.set_mode((Window.WIDTH, Window.HEIGHT), vsync=1)
+outer = pygame.display.set_mode((Window.HEIGHT, Window.WIDTH), vsync=1)
+screen = pygame.Surface((Window.WIDTH, Window.HEIGHT))
 clock = pygame.time.Clock()
 
 start = StartScreen()
@@ -30,5 +31,6 @@ while True:
             activeScreen = bird
 
     activeScreen.tick(screen, events)
+    outer.blit(pygame.transform.rotate(screen, 90), (0, 0))
     pygame.display.update()
     clock.tick(Window.FPS)
