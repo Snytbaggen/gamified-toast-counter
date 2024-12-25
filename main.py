@@ -27,6 +27,7 @@ activeScreen = bird
 
 while True:
     io.read_button()
+    io.rainbow()
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
