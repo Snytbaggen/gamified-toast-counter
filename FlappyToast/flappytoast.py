@@ -84,8 +84,8 @@ class FlappyToastScreen(GameScreenInterface):
         if len(pipes) == 0:
             return score, high_score
         
-        pipe_center = pipes[0].centerx
-        if self.bird_rect.centerx in range(pipe_center-self.floor_speed, pipe_center):
+        pipe_center = pipes[0].centery
+        if self.bird_rect.centery in range(pipe_center-self.floor_speed, pipe_center):
             score += 1
             self.score_sound.play()
         
