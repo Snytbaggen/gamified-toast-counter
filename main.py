@@ -7,8 +7,13 @@ from MainMenu.startscreen import StartScreen
 pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=512)
 print("Initializing pygame")
 pygame.init()
-outer = pygame.display.set_mode((Window.HEIGHT, Window.WIDTH), vsync=1)
-screen = pygame.Surface((Window.WIDTH, Window.HEIGHT))
+
+if IS_RPI:
+    screen = pygame.display.set_mode((Window.WIDTH, Window.HEIGHT), vsync=1)
+else:
+    outer = pygame.display.set_mode((Window.HEIGHT, Window.WIDTH), vsync=1)
+    screen = pygame.Surface((Window.WIDTH, Window.HEIGHT))
+    
 clock = pygame.time.Clock()
 
 start = StartScreen()
@@ -18,7 +23,7 @@ io.init()
 start.init()
 bird.init()
 
-activeScreen = start
+activeScreen = bird
 
 while True:
     io.read_button()
@@ -31,6 +36,7 @@ while True:
             activeScreen = bird
 
     activeScreen.tick(screen, events)
-    outer.blit(pygame.transform.rotate(screen, 90), (0, 0))
+    if not IS_RPI:
+        outer.blit(pygame.transform.rotate(screen, -90), (0, 0))
     pygame.display.update()
     clock.tick(Window.FPS)

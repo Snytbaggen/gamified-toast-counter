@@ -1,7 +1,6 @@
 import pygame, sys
-from enum import Enum
+from constants import *
 
-IS_RPI = sys.platform == "linux"
 if IS_RPI:
     # I don't use Linux except on the Rpi, so this check is enough in my case
     from RPi import GPIO

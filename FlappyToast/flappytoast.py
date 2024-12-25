@@ -7,7 +7,7 @@ from gamescreen import GameScreenInterface
 
 class FlappyToastScreen(GameScreenInterface):
     GROUND_OFFSET = 124
-    FLOOR_POS = Window.HEIGHT - GROUND_OFFSET
+    FLOOR_POS = Window.WIDTH - GROUND_OFFSET
     
     class GameState(Enum):
         IDLE = "idle"
@@ -18,33 +18,33 @@ class FlappyToastScreen(GameScreenInterface):
         if not self.game_state == self.GameState.RUNNING:
             return []
         random_pipe_pos = random.choice(self.pipe_height)
-        bottom_pipe = self.pipe_surface.get_rect(midtop = (Window.WIDTH + 100,random_pipe_pos))
-        top_pipe = self.pipe_surface.get_rect(midbottom = (Window.WIDTH + 100,random_pipe_pos-self.pipe_gap))
+        bottom_pipe = self.pipe_surface.get_rect(midleft = (random_pipe_pos, -100))
+        top_pipe = self.pipe_surface.get_rect(midright = (random_pipe_pos-self.pipe_gap, -100))
         return bottom_pipe, top_pipe
 
     def draw_floor(self, screen):
-        screen.blit(self.floor_surface, (self.floor_x_pos,self.FLOOR_POS))
-        screen.blit(self.floor_surface, (self.floor_x_pos+984,self.FLOOR_POS))
+        blit(screen, self.floor_surface, (self.FLOOR_POS, self.floor_y_pos))
+        blit(screen, self.floor_surface, (self.FLOOR_POS, self.floor_y_pos-984))
 
     def move_pipes(self, pipes):
         for pipe in pipes:
-            pipe.centerx -= self.x_speed
-        return list(filter(lambda pipe: pipe.right > 0, pipes))
+            pipe.centery += self.floor_speed
+        return list(filter(lambda pipe: pipe.top < Window.HEIGHT, pipes))
 
     def draw_pipes(self, pipes, screen):
         for pipe in pipes:
-            if pipe.bottom >= Window.HEIGHT:
+            if pipe.right >= Window.WIDTH:
                 screen.blit(self.pipe_surface, pipe)
             else:
-                screen.blit(self.flip_pipe_surface, pipe)
+                blit(screen, self.flip_pipe_surface, pipe)
 
     def check_collision(self, pipes):
         for i in range(0, min(2, len(pipes)-1)):
             pipe = pipes[i]
             if self.bird_rect.colliderect(pipe):
                 return self.game_over()
-        if self.bird_rect.top < -100 or self.bird_rect.bottom >= self.FLOOR_POS:
-            self.bird_rect.bottom = self.FLOOR_POS
+        if self.bird_rect.left < -100 or self.bird_rect.right >= self.FLOOR_POS:
+            self.bird_rect.right = self.FLOOR_POS
             return self.game_over()
         return self.GameState.RUNNING
 
@@ -66,23 +66,26 @@ class FlappyToastScreen(GameScreenInterface):
     def score_display(self, screen):
         if self.game_state == self.GameState.RUNNING:
             score_surface = self.game_font.render(str(self.score), True, (255,255,255))
-            score_rect = score_surface.get_rect(center = (Window.WIDTH/2, 50))
-            screen.blit(score_surface, score_rect)
+            score_surface = pygame.transform.rotate(score_surface, 90)
+            score_rect = score_surface.get_rect(center = (50, Window.HEIGHT/2))
+            blit(screen, score_surface, score_rect)
         if self.game_state == self.GameState.IDLE or self.game_state == self.GameState.GAME_OVER:
             score_surface = self.game_font.render(f'Score: {self.score}', True, (255,255,255))
-            score_rect = score_surface.get_rect(center = (Window.WIDTH/2, 50))
-            screen.blit(score_surface, score_rect)
+            score_surface = pygame.transform.rotate(score_surface, 90)
+            score_rect = score_surface.get_rect(center = (50, Window.HEIGHT/2))
+            blit(screen, score_surface, score_rect)
 
             high_score_surface = self.game_font.render(f'High score: {self.high_score}', True, (255,255,255))
-            high_score_rect = high_score_surface.get_rect(center = (Window.WIDTH/2, 750))
-            screen.blit(high_score_surface, high_score_rect)
+            high_score_surface = pygame.transform.rotate(high_score_surface, 90)
+            high_score_rect = high_score_surface.get_rect(center = (750, Window.HEIGHT/2))
+            blit(screen, high_score_surface, high_score_rect)
 
     def update_score(self, score, high_score, pipes):
         if len(pipes) == 0:
             return score, high_score
         
         pipe_center = pipes[0].centerx
-        if self.bird_rect.centerx in range(pipe_center-self.x_speed, pipe_center):
+        if self.bird_rect.centerx in range(pipe_center-self.floor_speed, pipe_center):
             score += 1
             self.score_sound.play()
         
@@ -100,7 +103,7 @@ class FlappyToastScreen(GameScreenInterface):
         self.game_state = self.GameState.IDLE
         self.score = 0
         self.high_score = 0
-        self.x_speed = 3
+        self.floor_speed = 3
         self.bird_jump = 9
         self.pipe_gap = 145
         self.disable_timer = 0
@@ -109,7 +112,7 @@ class FlappyToastScreen(GameScreenInterface):
         self.bg_surface = loadAndScale("sprites/background-day.png")
 
         self.floor_surface = loadAndScale("sprites/base.png")
-        self.floor_x_pos = 0
+        self.floor_y_pos = 0
  
         bird_downflap = loadAndScale("sprites/bluebird-downflap.png", True)
         bird_midflap = loadAndScale("sprites/bluebird-midflap.png", True)
@@ -117,10 +120,10 @@ class FlappyToastScreen(GameScreenInterface):
         self.bird_frames = [bird_downflap, bird_midflap, bird_upflap]
         self.bird_index = 0
         self.bird_surface = self.bird_frames[self.bird_index]
-        self.bird_rect = self.bird_surface.get_rect(center=(100,Window.HEIGHT/2))
+        self.bird_rect = self.bird_surface.get_rect(center=(Window.WIDTH/2, Window.HEIGHT - 100))
 
         self.pipe_surface = loadAndScale("sprites/pipe-green.png")
-        self.flip_pipe_surface = pygame.transform.flip(self.pipe_surface, False, True)
+        self.flip_pipe_surface = pygame.transform.flip(self.pipe_surface, True, False)
         self.pipe_list = []
         self.SPAWNPIPE = Events.FLAPPY_TOAST
         pygame.time.set_timer(self.SPAWNPIPE, 2000)
@@ -147,7 +150,7 @@ class FlappyToastScreen(GameScreenInterface):
                     if self.game_state != self.GameState.RUNNING:
                         self.game_state = self.GameState.RUNNING
                         self.pipe_list = []
-                        self.bird_rect.centery = Window.HEIGHT/2
+                        self.bird_rect.centerx = Window.WIDTH/2
                         self.score = 0
                     self.bird_movement = -self.bird_jump
                     self.flap_sound.play()
@@ -157,16 +160,15 @@ class FlappyToastScreen(GameScreenInterface):
             if event.type == self.SPAWNPIPE:
                 self.pipe_list.extend(self.create_pipe())
 
-        screen.blit(self.bg_surface, (0,0))
+        blit(screen, self.bg_surface, (0,0))
 
         if self.game_state == self.GameState.RUNNING:
             # Bird
             self.bird_movement += self.gravity
             rotated_bird = self.rotate_bird(self.bird_surface)
-            self.bird_rect.centery += self.bird_movement
-            screen.blit(rotated_bird, self.bird_rect)
+            self.bird_rect.centerx += self.bird_movement
+            blit(screen, rotated_bird, self.bird_rect)
             
-
             # Pipes
             self.pipe_list = self.move_pipes(self.pipe_list)
             self.draw_pipes(self.pipe_list, screen)
@@ -175,18 +177,18 @@ class FlappyToastScreen(GameScreenInterface):
             self.score, self.high_score = self.update_score(self.score, self.high_score, self.pipe_list)
         else:
             rotated_bird = self.rotate_bird(self.bird_surface)
-            screen.blit(rotated_bird, self.bird_rect)
+            blit(screen, rotated_bird, self.bird_rect)
 
             self.draw_pipes(self.pipe_list, screen)
 
-            screen.blit(self.game_over_surface, self.game_over_rect)
+            blit(screen, self.game_over_surface, self.game_over_rect)
             
 
         # Floor
         if self.game_state != self.GameState.GAME_OVER:
-            self.floor_x_pos -= self.x_speed
+            self.floor_y_pos += self.floor_speed
         self.draw_floor(screen)
-        if self.floor_x_pos <= -984:
-            self.floor_x_pos = 0
+        if self.floor_y_pos >= 984:
+            self.floor_y_pos = 0
 
         self.score_display(screen)

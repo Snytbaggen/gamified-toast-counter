@@ -1,9 +1,11 @@
-from enum import Enum
+import sys
 from pygame import USEREVENT
 
+IS_RPI = sys.platform == "linux"
+
 class Window():
-    WIDTH = 480
-    HEIGHT = 800
+    WIDTH = 800
+    HEIGHT = 480
     FPS = 60
 
 class Events():
