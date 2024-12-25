@@ -4,7 +4,7 @@ from constants import *
 from FlappyToast.flappytoast import FlappyToastScreen
 from MainMenu.startscreen import StartScreen
 
-pygame.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=512)
+pygame.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=1024)
 print("Initializing pygame")
 pygame.init()
 
@@ -32,6 +32,7 @@ while True:
     for event in events:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             pygame.quit()
+            io.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             activeScreen = bird

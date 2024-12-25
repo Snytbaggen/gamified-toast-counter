@@ -14,11 +14,11 @@ class IOEvents():
 
 BUTTON_PIN = 37
 
-LED_COUNT = 5
+LED_COUNT = 40
 LED_PIN = 18
 LED_FREQ_HZ = 800000
 LED_DMA = 10
-LED_BRIGHTNESS = 65
+LED_BRIGHTNESS = 5
 LED_INVERT = False
 LED_CHANNEL = 0
 
@@ -30,6 +30,11 @@ def init():
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     leds = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     leds.begin()
+
+def quit():
+    for i in range(leds.numPixels()):
+        leds.setPixelColor(i, Color(0, 0, 0))
+    leds.show()
 
 def read_button():
     global button_state
@@ -54,8 +59,7 @@ def wheel(pos):
 def rainbow():
     global leds
     """Draw rainbow that fades across all pixels at once."""
-    for j in range(256):
-        for i in range(leds.numPixels()):
-            leds.setPixelColor(i, wheel((i+j) & 255))
-        leds.show()
+    for i in range(leds.numPixels()):
+        leds.setPixelColor(i, Color(0,0,255))
+    leds.show()
     
