@@ -2,6 +2,34 @@ from typing import List
 from toasterio import *
 from constants import Leds
 
+class BtnLedController():
+    def __init__(self):
+        self.brightness = 0
+        self.counter = 1
+    
+    def set_data(self,
+                 brightnessBuffer: List[int],
+                 repetitions = 0,
+                 shift_in = True,
+                 step_delay = 1
+                 ):
+        self.brightnessBuffer = brightnessBuffer
+        self.repetitions = repetitions
+        self.shift_in = shift_in
+        self.step_delay = step_delay
+        self.move_led()
+
+    def move_led(self):
+        self.brightnessBuffer = self.brightnessBuffer[-1:] + self.brightnessBuffer[:-1]
+        self.brightness = self.brightnessBuffer[0]
+    
+    def draw(self):
+        self.counter -=1
+        if self.counter <= 0:
+            draw_btn_led(self.brightness)
+            self.move_led()
+            self.counter = self.step_delay
+
 class LedController():
     def __init__(self):
         self.leftBuffer = [Color(0, 0, 0)] * Leds.LEFT_LEDS
@@ -42,3 +70,4 @@ class LedController():
             self.counter = self.step_delay
 
 shared_led_controller = LedController()
+shared_btn_led_controller = BtnLedController()

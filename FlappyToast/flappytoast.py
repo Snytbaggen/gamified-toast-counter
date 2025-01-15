@@ -145,7 +145,7 @@ class FlappyToastScreen(GameScreenInterface):
             self.disable_timer -= 1
 
         for event in events:
-            if event.type == pygame.KEYDOWN or event.type == IOEvents.EVENT_BUTTON_PRESS:
+            if event.type == IOEvents.EVENT_BUTTON_PRESS:
                 if self.disable_timer <= 0:
                     if self.game_state != self.GameState.RUNNING:
                         self.game_state = self.GameState.RUNNING

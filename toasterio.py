@@ -28,7 +28,7 @@ button_state = False if IS_RPI else True
 nfc = MFRC522()
 
 def init():
-    global leds
+    global leds, btn_led
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     leds = Adafruit_NeoPixel(Leds.TOTAL_LEDS, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
@@ -56,6 +56,10 @@ def draw_leds(colors: List[Color], brightness):
     for i in range(Leds.TOTAL_LEDS):
         leds.setPixelColor(i, colors[i])
     leds.show()
+
+def draw_btn_led(brightness):
+    # TODO
+    pass
 
 def mockLeds(screen):
     global leds
