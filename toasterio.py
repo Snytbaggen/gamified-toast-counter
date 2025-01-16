@@ -6,7 +6,7 @@ if IS_RPI:
     # I don't use Linux except on the Rpi, so this check is enough in my case
     from RPi import GPIO
     from rpi_ws281x import *
-    import MFRC522
+    from mfrc522 import MFRC522
 else:
     import Mock.GPIO as GPIO
     from MockLibs.rpi_ws281x import *
