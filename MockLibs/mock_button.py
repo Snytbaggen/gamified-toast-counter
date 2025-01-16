@@ -7,7 +7,7 @@ is_pressed = False
 
 def init():
     global btn_led, btn_center, btn_led_coord, btn_rect
-    btn_led = loadSprite("sprites/mock_btn_led.png")
+    btn_led = loadSprite("sprites/mock_btn_led.png", True)
     btn_center = ((Window.HEIGHT / 2) + 74, Window.WIDTH + 100)
     btn_led_coord = (btn_center[0]-75, btn_center[1]-75)
     btn_rect = btn_led.get_rect(center=btn_center)

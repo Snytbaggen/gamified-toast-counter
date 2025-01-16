@@ -26,11 +26,11 @@ io.init()
 start.init()
 bird.init()
 
-activeScreen = bird
+activeScreen = start
 
-leds = [io.Color(0, 130, 202), io.Color(5, 82, 144)] * 8
-shared_led_controller.set_data(leds, leds, [50, 50], 0, True, 60)
-shared_btn_led_controller.set_data(list(range(1,255,2)), 0, True, 1)
+#leds = [io.Color(0, 130, 202), io.Color(5, 82, 144)] * 8
+#shared_led_controller.set_data(leds, leds, [50, 50], 0, True, 60)
+#shared_btn_led_controller.set_data(list(range(1,255,2)), 0, True, 1)
 
 while True:
     io.read_button()

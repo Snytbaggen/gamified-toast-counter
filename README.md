@@ -8,6 +8,7 @@ Flappy Bird: 200-299
 
 ## SPI
 SPI must be set to enabled in raspi-config
+Install the `spidev` and `mfrc522` Python packages throuth pip
 SPI-Py must be installed by entering the `SPI-Py` folder and running `sudo python3 setup.py install`
 
 ## Pins
@@ -27,3 +28,6 @@ RST: 22 (GPIO 25)
 pygame
 Rpi.GPIO
 rpi_ws281x
+
+## Development
+Requires the `Mock.GPIO` library

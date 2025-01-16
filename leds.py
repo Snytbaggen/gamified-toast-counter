@@ -6,6 +6,10 @@ class BtnLedController():
     def __init__(self):
         self.brightness = 0
         self.counter = 1
+        self.brightnessBuffer = [0]
+        self.repetitions = 0
+        self.shift_in = True
+        self.step_delay = 1
     
     def set_data(self,
                  brightnessBuffer: List[int],
@@ -32,10 +36,18 @@ class BtnLedController():
 
 class LedController():
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.leftBuffer = [Color(0, 0, 0)] * Leds.LEFT_LEDS
         self.rightBuffer = [Color(0, 0, 0)] * Leds.RIGHT_LEDS
         self.brightness = [0] * Leds.LEFT_LEDS
         self.counter = 1
+        self.left = self.leftBuffer
+        self.right = self.rightBuffer
+        self.repetitions = 0
+        self.shift_in = True
+        self.step_delay = 1
 
     def set_data(self,
                 left: List[Color],

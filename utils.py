@@ -12,3 +12,6 @@ def loadSound(path):
 
 def blit(screen: pygame.Surface, resource, pos: tuple):
     screen.blit(resource, (pos[0], pos[1]))
+
+def rotate(resource):
+    return pygame.transform.rotate(resource, 90)
