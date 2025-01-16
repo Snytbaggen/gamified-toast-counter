@@ -4,13 +4,16 @@ from constants import Leds
 
 class BtnLedController():
     def __init__(self):
+        self.clear()
+    
+    def clear(self):
         self.brightness = 0
         self.counter = 1
         self.brightnessBuffer = [0]
         self.repetitions = 0
         self.shift_in = True
         self.step_delay = 1
-    
+
     def set_data(self,
                  brightnessBuffer: List[int],
                  repetitions = 0,

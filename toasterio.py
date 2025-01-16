@@ -16,6 +16,7 @@ class IOEvents():
     EVENT_BUTTON_PRESS = pygame.USEREVENT + 1
 
 BUTTON_PIN = 37
+BUTTON_LED_PIN = 33
 
 LED_PIN = 18
 LED_FREQ_HZ = 800000
@@ -31,6 +32,9 @@ def init():
     global leds, btn_led
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BUTTON_LED_PIN, GPIO.OUT)
+    btn_led = GPIO.PWM(33, 1000)
+    btn_led.start(0)
     leds = Adafruit_NeoPixel(Leds.TOTAL_LEDS, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     leds.begin()
 
@@ -58,7 +62,7 @@ def draw_leds(colors: List[Color], brightness):
     leds.show()
 
 def draw_btn_led(brightness):
-    # TODO
+    btn_led.ChangeDutyCycle((brightness * 100) / 255)
     pass
 
 def mockLeds(screen):
