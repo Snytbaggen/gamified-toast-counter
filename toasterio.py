@@ -14,6 +14,7 @@ else:
 
 class IOEvents():
     EVENT_BUTTON_PRESS = pygame.USEREVENT + 1
+    EVENT_NFC_READ = pygame.USEREVENT + 2
 
 BUTTON_PIN = 37
 BUTTON_LED_PIN = 33
@@ -52,7 +53,17 @@ def read_button():
             pygame.event.post(pygame.event.Event(IOEvents.EVENT_BUTTON_PRESS))
 
 def check_nfc():
-    pass
+    global nfc
+    status, _ = nfc.MFRC522_Request(nfc.PICC_REQIDL)
+    if status != nfc.MI_OK:
+        return
+    status, _ = nfc.MFRC522_Anticoll()
+    buf = nfc.MFRC511_Read(0)
+    nfc.MFRC522_Request(nfc.PICC_HALT)
+    if buf:
+        id = ''.join([format(x, "02x") for x in buf])
+        pygame.event.post(pygame.event.Event(IOEvents.EVENT_NFC_READ, { "id": id }))
+
 
 def draw_leds(colors: List[Color], brightness):
     global leds
@@ -68,4 +79,7 @@ def draw_btn_led(brightness):
 def mockLeds(screen):
     global leds
     leds.draw(screen)
-    
+
+def mockNfc(id):
+    global nfc
+    nfc.SetMockId(id)

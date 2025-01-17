@@ -12,10 +12,9 @@ pygame.init()
 if IS_RPI:
     screen = pygame.display.set_mode((Window.WIDTH, Window.HEIGHT), pygame.FULLSCREEN, vsync=1)
 else:
-    from MockLibs import mock_button
     outer = pygame.display.set_mode((Window.HEIGHT + 148, Window.WIDTH + 200), vsync=1)
     screen = pygame.Surface((Window.WIDTH, Window.HEIGHT))
-    mock_button.init()
+    from MockLibs import mock_button
     
 clock = pygame.time.Clock()
 
@@ -39,12 +38,14 @@ while True:
     shared_btn_led_controller.draw()
     events = pygame.event.get()
     for event in events:
+        if event.type == io.IOEvents.EVENT_NFC_READ:
+            print(event.dict["id"])
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             pygame.quit()
             io.quit()
             sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            activeScreen = bird
+        #if event.type == pygame.MOUSEBUTTONDOWN:
+        #    activeScreen = bird
 
     activeScreen.tick(screen, events)
     if not IS_RPI:

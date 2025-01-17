@@ -30,6 +30,13 @@ class StartScreen(GameScreenInterface):
                 shared_btn_led_controller.set_data(self.btn_led)
         
         screen.blit(self.bg, (0, 0))
-        text = rotate(self.font.render(str(self.number), True, (255,255,255)))
-        text_rect = text.get_rect(center=(Window.WIDTH / 2, Window.HEIGHT / 2))
-        screen.blit(text, text_rect)
+
+        drawOutline(
+            screen,
+            (Window.WIDTH / 2, Window.HEIGHT / 2),
+            self.font,
+            str(self.number),
+            (255, 255, 255),
+            (0, 0, 0),
+            4
+        )
