@@ -106,7 +106,7 @@ class MFRC522():
     def MFRC522_Anticoll(self):
         return self.MFRC522_Request(1)
 
-    def MFRC511_Read(self, blockAddr):
+    def MFRC522_Read(self, blockAddr):
         buf = bytes.fromhex(self.mock_id)
         self.mock_id = ""
         return buf

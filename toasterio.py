@@ -58,7 +58,7 @@ def check_nfc():
     if status != nfc.MI_OK:
         return
     status, _ = nfc.MFRC522_Anticoll()
-    buf = nfc.MFRC511_Read(0)
+    buf = nfc.MFRC522_Read(0)
     nfc.MFRC522_Request(nfc.PICC_HALT)
     if buf:
         id = ''.join([format(x, "02x") for x in buf])
