@@ -41,7 +41,3 @@ class SettingsScreen(GameScreen):
         screen.blit(self.bg, (0, 0))
         screen.blit(self.btn_back, self.btn_back_rect)
         screen.blit(self.btn_shutdown, self.btn_shutdown_rect)
-
-
-
-call("sudo poweroff", shell=True)
