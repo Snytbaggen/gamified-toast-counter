@@ -1,6 +1,6 @@
 import pygame
 from utils import *
-from constants import *
+from common import *
 from toasterio import IOEvents, mockNfc
 
 is_pressed = False

@@ -1,5 +1,5 @@
 import pygame
-from constants import *
+from common import *
 
 class Adafruit_NeoPixel(object):
     def __init__(self, leds, pins, freq, dma, invert, brightness, channel):

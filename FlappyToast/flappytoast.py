@@ -2,10 +2,10 @@ import pygame, random
 from utils import *
 from enum import Enum
 from toasterio import IOEvents
-from constants import Window, Events
-from gamescreen import GameScreenInterface
+from common import Window, BaseEvents, NavigationDestination
+from gamescreen import GameScreen
 
-class FlappyToastScreen(GameScreenInterface):
+class FlappyToastScreen(GameScreen):
     GROUND_OFFSET = 124
     FLOOR_POS = Window.WIDTH - GROUND_OFFSET
     
@@ -94,7 +94,7 @@ class FlappyToastScreen(GameScreenInterface):
         
         return score, high_score
 
-    def init(self):
+    def __init__(self):
         self.game_font = pygame.font.Font("fonts/04B_19.TTF", 40)
 
         # Game Variables
@@ -109,6 +109,8 @@ class FlappyToastScreen(GameScreenInterface):
         self.disable_timer = 0
 
         # Surfaces
+        self.btn_back = Icon("sprites/ic_back.png", (44, Window.HEIGHT - 44), NavigationDestination.BACK)
+
         self.bg_surface = loadAndScale("sprites/background-day.png")
 
         self.floor_surface = loadAndScale("sprites/base.png")
@@ -125,12 +127,14 @@ class FlappyToastScreen(GameScreenInterface):
         self.pipe_surface = loadAndScale("sprites/pipe-green.png")
         self.flip_pipe_surface = pygame.transform.flip(self.pipe_surface, True, False)
         self.pipe_list = []
-        self.SPAWNPIPE = Events.FLAPPY_TOAST
+        self.SPAWNPIPE = BaseEvents.FLAPPY_TOAST
+
+
         pygame.time.set_timer(self.SPAWNPIPE, 2000)
         self.pipe_height = [200, 250, 300, 350]
 
-        self.BUTTONPRESS = Events.FLAPPY_TOAST + 1
-        self.BIRDFLAP = Events.FLAPPY_TOAST + 2
+        self.BUTTONPRESS = BaseEvents.FLAPPY_TOAST + 1
+        self.BIRDFLAP = BaseEvents.FLAPPY_TOAST + 2
         pygame.time.set_timer(self.BIRDFLAP, 200)
 
         self.game_over_surface = loadAndScale("sprites/message.png", True)
@@ -145,6 +149,8 @@ class FlappyToastScreen(GameScreenInterface):
             self.disable_timer -= 1
 
         for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.btn_back.check_press(event.pos)
             if event.type == IOEvents.EVENT_BUTTON_PRESS:
                 if self.disable_timer <= 0:
                     if self.game_state != self.GameState.RUNNING:
@@ -156,7 +162,7 @@ class FlappyToastScreen(GameScreenInterface):
                     self.flap_sound.play()
             if event.type == self.BIRDFLAP:
                 self.bird_index = (self.bird_index + 1) % len(self.bird_frames)
-                self.bird_surface, bird_rect = self.bird_animation()
+                self.bird_surface, _ = self.bird_animation()
             if event.type == self.SPAWNPIPE:
                 self.pipe_list.extend(self.create_pipe())
 
@@ -192,3 +198,5 @@ class FlappyToastScreen(GameScreenInterface):
             self.floor_y_pos = 0
 
         self.score_display(screen)
+
+        self.btn_back.draw(screen)

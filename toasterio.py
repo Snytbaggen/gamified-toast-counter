@@ -1,6 +1,6 @@
 import pygame, sys
 from typing import List
-from constants import *
+from common import *
 
 if IS_RPI:
     # I don't use Linux except on the Rpi, so this check is enough in my case
@@ -13,8 +13,8 @@ else:
     from MockLibs.MFRC522 import MFRC522
 
 class IOEvents():
-    EVENT_BUTTON_PRESS = pygame.USEREVENT + 1
-    EVENT_NFC_READ = pygame.USEREVENT + 2
+    EVENT_BUTTON_PRESS = BaseEvents.IO + 1
+    EVENT_NFC_READ = BaseEvents.IO + 2
 
 BUTTON_PIN = 37
 BUTTON_LED_PIN = 33

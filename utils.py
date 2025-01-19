@@ -1,5 +1,18 @@
 import pygame
-from constants import IS_RPI, Window
+from common import IS_RPI, Window, NavigationDestination, SystemEvents
+
+class Icon():
+    def __init__(self, path, center, destination: NavigationDestination = None):
+        self.surface = loadSprite(path, True)
+        self.rect = self.surface.get_rect(center=center)
+        self.destination = destination
+    
+    def draw(self, surface: pygame.surface.Surface):
+        surface.blit(self.surface, self.rect)
+    
+    def check_press(self, pos):
+        if checkPointCollision(self.rect, pos):
+            pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": self.destination}))
 
 def checkPointCollision(rect, point) -> bool:
     if IS_RPI:
@@ -8,7 +21,7 @@ def checkPointCollision(rect, point) -> bool:
         # When running on a non-Pi the screen is both rotated and has extra padding added.
         # To account for this the point is flipped and the padding subtracted.
         offset = (Window.PC_WIDTH - Window.HEIGHT) / 2
-        return pygame.Rect.collidepoint(rect, (point[1], point[0] - offset))
+        return pygame.Rect.collidepoint(rect, (point[1], Window.HEIGHT - point[0] + offset))
 
 def loadAndScale(path, convert_alpha = False) -> pygame.surface.Surface:
     return pygame.transform.scale2x(loadSprite(path, convert_alpha))

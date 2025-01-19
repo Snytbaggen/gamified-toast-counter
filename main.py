@@ -1,6 +1,7 @@
 import pygame, sys
 import toasterio as io
-from constants import *
+import navigation
+from common import *
 from FlappyToast.flappytoast import FlappyToastScreen
 from MainMenu.startscreen import StartScreen
 from leds import shared_led_controller, shared_btn_led_controller
@@ -22,14 +23,7 @@ start = StartScreen()
 bird = FlappyToastScreen()
 
 io.init()
-start.init()
-bird.init()
-
-activeScreen = start
-
-#leds = [io.Color(0, 130, 202), io.Color(5, 82, 144)] * 8
-#shared_led_controller.set_data(leds, leds, [50, 50], 0, True, 60)
-#shared_btn_led_controller.set_data(list(range(1,255,2)), 0, True, 1)
+navigation.init()
 
 while True:
     io.read_button()
@@ -40,14 +34,19 @@ while True:
     for event in events:
         if event.type == io.IOEvents.EVENT_NFC_READ:
             print(event.dict["id"])
-        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+        elif event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             pygame.quit()
             io.quit()
             sys.exit()
+        elif event.type == SystemEvents.NAVIGATE:
+            print(event.dict)
+            dest = event.dict["dest"]
+            if dest:
+                navigation.navigate(dest)
         #if event.type == pygame.MOUSEBUTTONDOWN:
         #    activeScreen = bird
 
-    activeScreen.tick(screen, events)
+    navigation.current().tick(screen, events)
     if not IS_RPI:
         outer.blit(pygame.transform.rotate(screen, -90), (74, 0))
         io.mockLeds(outer)

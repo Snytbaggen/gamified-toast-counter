@@ -1,24 +1,12 @@
 import pygame
-from gamescreen import GameScreenInterface
+from gamescreen import GameScreen
 from utils import *
-from constants import Window
+from common import Window, NavigationDestination
 from toasterio import IOEvents, Color
 from leds import shared_led_controller, shared_btn_led_controller
 
-class Icon():
-    def __init__(self, path, center, destination = None):
-        self.surface = loadSprite(path, True)
-        self.rect = self.surface.get_rect(center=center)
-    
-    def draw(self, surface: pygame.surface.Surface):
-        surface.blit(self.surface, self.rect)
-    
-    def check_press(self, pos):
-        if checkPointCollision(self.rect, pos):
-            print("Click detected")
-
-class StartScreen(GameScreenInterface):
-    def init(self):
+class StartScreen(GameScreen):
+    def __init__(self):
         self.font = pygame.font.Font('fonts/gillies.ttf', 240)
         self.number = 0
         self.bg = loadSprite("./sprites/menu_home.png")
@@ -28,9 +16,9 @@ class StartScreen(GameScreenInterface):
         self.led_counter = 0
         self.text_pos = (220, Window.HEIGHT / 2)
         self.icons = [
-            Icon("sprites/ic_settings.png", (656, (Window.HEIGHT / 2) - 122)),
-            Icon("sprites/ic_star.png", (656, Window.HEIGHT / 2)),
-            Icon("sprites/ic_controller.png", (656, (Window.HEIGHT / 2) + 122))
+            Icon("sprites/ic_settings.png", (656, (Window.HEIGHT / 2) - 122), NavigationDestination.SETTINGS),
+            Icon("sprites/ic_star.png", (656, Window.HEIGHT / 2), NavigationDestination.EXTRA),
+            Icon("sprites/ic_controller.png", (656, (Window.HEIGHT / 2) + 122), NavigationDestination.GAMES)
         ]
 
     def tick(self, screen, events):

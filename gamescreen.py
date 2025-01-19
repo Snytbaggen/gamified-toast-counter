@@ -1,7 +1,7 @@
 from typing import List
 import pygame
 
-class GameScreenInterface:
+class GameScreen:
     def init(self):
         pass
 
