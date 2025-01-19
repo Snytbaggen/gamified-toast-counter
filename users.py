@@ -8,8 +8,18 @@ except:
     print("Failed to load data")
     users = {}
 
+def calculate_top():
+    global top_users
+    stats = []
+    for u in users.values():
+        stats.append((u["toasts"], u["name"]))
+    stats.sort(reverse=True)
+    top_users = list(map(lambda x: str(x[0]) + " - " + x[1], stats[:3]))
+
 current_user = None
 total_toast = 0
+top_users = []
+calculate_top()
 
 for u in users.values():
     total_toast += u["toasts"]
@@ -21,6 +31,7 @@ def increment_toast():
     current_user["toasts"] += 1
     total_toast += 1
     update_user(current_user)
+    calculate_top()
 
 def logout():
     global current_user

@@ -23,8 +23,11 @@ class StartScreen(GameScreen):
             Icon("sprites/ic_star.png", (656, Window.HEIGHT / 2), NavigationDestination.EXTRA),
             Icon("sprites/ic_controller.png", (656, (Window.HEIGHT / 2) + 122), NavigationDestination.GAMES)
         ]
+        self.high_score_font = pygame.font.Font('fonts/baloo.ttf', 34)
 
     def tick(self, screen, events):
+        screen.blit(self.bg, (0, 0))
+
         if (self.led_counter > 0):
             self.led_counter -= 1
         else:
@@ -41,7 +44,11 @@ class StartScreen(GameScreen):
                 shared_led_controller.set_data(self.leds, self.leds, [50], 1, True, 1)
                 shared_btn_led_controller.set_data(self.btn_led)
         
-        screen.blit(self.bg, (0, 0))
+        if len(users.top_users) > 0:
+            for i, score in enumerate(users.top_users):
+                score_surface = rotate(self.high_score_font.render(score, True, (0,130,202)))
+                score_rect = score_surface.get_rect(center=((i*40) + 485, Window.HEIGHT / 2))
+                screen.blit(score_surface, score_rect)
 
         text = rotate(self.font.render(str(users.total_toast), True, (255,255,255)))
         text_rect = text.get_rect(center=self.text_pos)
