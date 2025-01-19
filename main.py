@@ -12,7 +12,7 @@ pygame.init()
 if IS_RPI:
     screen = pygame.display.set_mode((Window.WIDTH, Window.HEIGHT), pygame.FULLSCREEN, vsync=1)
 else:
-    outer = pygame.display.set_mode((Window.HEIGHT + 148, Window.WIDTH + 200), vsync=1)
+    outer = pygame.display.set_mode((Window.PC_WIDTH, Window.PC_HEIGHT), vsync=1)
     screen = pygame.Surface((Window.WIDTH, Window.HEIGHT))
     from MockLibs import mock_button
     

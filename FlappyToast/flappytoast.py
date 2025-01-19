@@ -95,7 +95,7 @@ class FlappyToastScreen(GameScreenInterface):
         return score, high_score
 
     def init(self):
-        self.game_font = pygame.font.Font("./04B_19.TTF", 40)
+        self.game_font = pygame.font.Font("fonts/04B_19.TTF", 40)
 
         # Game Variables
         self.gravity = 0.5

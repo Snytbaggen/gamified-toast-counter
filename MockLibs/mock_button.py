@@ -7,7 +7,7 @@ is_pressed = False
 
 window_height = Window.HEIGHT + 148
 
-font = pygame.font.Font('./04B_19.TTF', 40)
+font = pygame.font.Font('fonts/04B_19.TTF', 40)
 btn_led = loadSprite("sprites/mock_btn_led.png", True)
 btn_center = (window_height / 2, Window.WIDTH + 100)
 btn_led_coord = (btn_center[0]-75, btn_center[1]-75)
@@ -38,7 +38,9 @@ def check_press(events: list[pygame.event.Event]):
                     pygame.event.post(pygame.event.Event(IOEvents.EVENT_BUTTON_PRESS))
                     is_pressed = True
             elif pygame.Rect.collidepoint(nfc_one_rect, pos):
-                mockNfc("AADE78")
+                mockNfc("0477ff04695f6181d6480000e1103e00")
+            elif pygame.Rect.collidepoint(nfc_two_rect, pos):
+                mockNfc("047369965b6f6180d5480000e1103e00")
         elif event.type == pygame.MOUSEBUTTONUP:
             if is_pressed:
                 is_pressed = False

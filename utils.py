@@ -1,10 +1,20 @@
 import pygame
+from constants import IS_RPI, Window
 
-def loadAndScale(resource, convert_alpha = False):
-    return pygame.transform.scale2x(loadSprite(resource, convert_alpha))
+def checkPointCollision(rect, point) -> bool:
+    if IS_RPI:
+        return pygame.Rect.collidepoint(rect, point)
+    else:
+        # When running on a non-Pi the screen is both rotated and has extra padding added.
+        # To account for this the point is flipped and the padding subtracted.
+        offset = (Window.PC_WIDTH - Window.HEIGHT) / 2
+        return pygame.Rect.collidepoint(rect, (point[1], point[0] - offset))
 
-def loadSprite(resource, convert_alpha = False):
-    surface = pygame.transform.rotate(pygame.image.load(resource), 90)
+def loadAndScale(path, convert_alpha = False) -> pygame.surface.Surface:
+    return pygame.transform.scale2x(loadSprite(path, convert_alpha))
+
+def loadSprite(path, convert_alpha = False) -> pygame.surface.Surface:
+    surface = pygame.transform.rotate(pygame.image.load(path), 90)
     return surface.convert_alpha() if convert_alpha else surface.convert()
 
 def loadSound(path):
