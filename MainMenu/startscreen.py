@@ -13,7 +13,7 @@ class StartScreen(GameScreen):
     def __init__(self):
         self.font = pygame.font.Font('fonts/gillies.ttf', 240)
         self.bg = loadSprite("./sprites/menu_home.png")
-        self.btn_audio = loadSound("./audio/btn_2.wav")
+        self.btn_audio = loadSound("./audio/err_1.wav")
         self.leds = [Color(255, 0, 0)] * 16
         self.btn_led = [255]
         self.led_counter = 0
