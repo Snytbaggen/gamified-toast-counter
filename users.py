@@ -42,11 +42,7 @@ def login_user(userId) -> bool:
     if current_user != None and current_user["userId"] == userId:
         return False
     
-    print("Trying to fetch user")
-    print(users)
-    print(userId)
     if userId in users:
-        print("Fetching user")
         current_user = users[userId]
         return True
     return False

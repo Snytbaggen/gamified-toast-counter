@@ -40,6 +40,7 @@ def init():
     leds.begin()
 
 def quit():
+    GPIO.cleanup()
     for i in range(leds.numPixels()):
         leds.setPixelColor(i, Color(0, 0, 0))
     leds.show()

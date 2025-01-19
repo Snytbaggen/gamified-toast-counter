@@ -16,7 +16,6 @@ class NewUserScreen(GameScreen):
             pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.BACK}))
         else:
             self.user_id = args["user_id"]
-            print(self.user_id)
 
         self.click_audio = loadSound("./audio/click.wav")
 

@@ -50,7 +50,6 @@ while True:
             io.quit()
             sys.exit()
         elif event.type == SystemEvents.NAVIGATE:
-            print(event.dict)
             dest = event.dict["dest"]
             args = event.dict["args"] if "args" in event.dict else {}
             if dest:
