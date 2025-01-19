@@ -6,6 +6,9 @@ from common import Window, BaseEvents, NavigationDestination
 from gamescreen import GameScreen
 
 class FlappyToastScreen(GameScreen):
+    def destination(self):
+        return NavigationDestination.GAMES
+
     GROUND_OFFSET = 124
     FLOOR_POS = Window.WIDTH - GROUND_OFFSET
     

@@ -1,6 +1,7 @@
 import pygame, sys
 import toasterio as io
 import navigation
+import users
 from common import *
 from FlappyToast.flappytoast import FlappyToastScreen
 from MainMenu.startscreen import StartScreen
@@ -34,7 +35,11 @@ while True:
     events = pygame.event.get()
     for event in events:
         if event.type == io.IOEvents.EVENT_NFC_READ:
-            print(event.dict["id"])
+            id = event.dict["id"]
+            if users.login_user(id):
+                pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.USER}))
+            elif not users.id_exists(id):
+                pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.NEW_USER, "args": {"user_id": id}}))
         elif event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             pygame.quit()
             io.quit()
@@ -42,10 +47,9 @@ while True:
         elif event.type == SystemEvents.NAVIGATE:
             print(event.dict)
             dest = event.dict["dest"]
+            args = event.dict["args"] if "args" in event.dict else {}
             if dest:
-                navigation.navigate(dest)
-        #if event.type == pygame.MOUSEBUTTONDOWN:
-        #    activeScreen = bird
+                navigation.navigate(dest, args)
 
     navigation.current().tick(screen, events)
     if not IS_RPI:
