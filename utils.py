@@ -6,12 +6,14 @@ class Icon():
         self.surface = loadSprite(path, True)
         self.rect = self.surface.get_rect(center=center)
         self.destination = destination
+        self.click_audio = loadSound("./audio/click.wav")
     
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.surface, self.rect)
     
     def check_press(self, pos):
         if checkPointCollision(self.rect, pos):
+            self.click_audio.play()
             pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": self.destination}))
 
 def checkPointCollision(rect, point) -> bool:

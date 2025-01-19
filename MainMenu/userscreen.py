@@ -18,6 +18,8 @@ class NewUserScreen(GameScreen):
             self.user_id = args["user_id"]
             print(self.user_id)
 
+        self.click_audio = loadSound("./audio/click.wav")
+
         self.username_input = ""
         self.username_font = pygame.font.Font('fonts/baloo.ttf', 40)
         self.username_pos = (290, Window.HEIGHT / 2)
@@ -47,17 +49,22 @@ class NewUserScreen(GameScreen):
                 pos = e.pos
                 char = self.keyboard.check_press(pos)
                 if char == "↑":
+                    self.click_audio.play()
                     self.keyboard.shift_pressed = not self.keyboard.shift_pressed
                 elif char == "←":
+                    self.click_audio.play()
                     if len(self.username_input) > 0:
                         self.username_input = self.username_input[:-1]
                 elif char != None:
+                    self.click_audio.play()
                     if len(self.username_input) < 15:
                         self.username_input += char
                         self.keyboard.shift_pressed = False
                 elif checkPointCollision(self.btn_cancel_rect, pos):
+                    self.click_audio.play()
                     pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.BACK}))
                 elif checkPointCollision(self.btn_ok_rect, pos):
+                    self.click_audio.play()
                     if len(self.username_input) > 0:
                         if users.name_exists(self.username_input):
                             self.in_error_state = True
@@ -91,6 +98,8 @@ class UserScreen(GameScreen):
         return NavigationDestination.USER
     
     def __init__(self):
+        self.click_audio = loadSound("./audio/click.wav")
+
         self.number_font = pygame.font.Font('fonts/gillies.ttf', 240)
         self.number_pos = (352, Window.HEIGHT / 2)
 
@@ -117,6 +126,7 @@ class UserScreen(GameScreen):
             if e.type == pygame.MOUSEBUTTONDOWN:
                 pos = e.pos
                 if checkPointCollision(self.btn_back_rect, pos):
+                    self.click_audio.play()
                     users.logout()
                     pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.BACK}))
             if e.type == IOEvents.EVENT_BUTTON_PRESS:

@@ -1,4 +1,5 @@
 import sys
+import pygame
 from pygame import USEREVENT
 
 IS_RPI = sys.platform == "linux"
