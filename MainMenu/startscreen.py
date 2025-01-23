@@ -43,7 +43,7 @@ class StartScreen(GameScreen):
                 self.btn_audio.play()
                 shared_led_controller.set_data(self.leds, self.leds, [50], 1, True, 1)
                 shared_btn_led_controller.set_data(self.btn_led)
-        
+
         if len(users.top_users) > 0:
             for i, score in enumerate(users.top_users):
                 score_surface = rotate(self.high_score_font.render(score, True, (0,130,202)))

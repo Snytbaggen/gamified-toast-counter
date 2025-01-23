@@ -10,7 +10,7 @@ from leds import shared_led_controller, shared_btn_led_controller
 class NewUserScreen(GameScreen):
     def destination(self):
         return NavigationDestination.NEW_USER
-    
+
     def __init__(self, args):
         if not "user_id" in args:
             pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.BACK}))
@@ -39,7 +39,7 @@ class NewUserScreen(GameScreen):
         self.btn_ok = loadSprite("sprites/btn_ok.png", True)
         btn_ok_pos = (705, (Window.HEIGHT / 2) + 105)
         self.btn_ok_rect = self.btn_ok.get_rect(center=btn_ok_pos)
-    
+
     def tick(self, screen, events):
         screen.blit(self.bg, (0, 0))
 
@@ -95,7 +95,7 @@ class NewUserScreen(GameScreen):
 class UserScreen(GameScreen):
     def destination(self):
         return NavigationDestination.USER
-    
+
     def __init__(self):
         self.click_audio = loadSound("./audio/click.wav")
 
@@ -134,11 +134,12 @@ class UserScreen(GameScreen):
                 self.btn_audio.play()
                 shared_led_controller.set_data(self.leds, self.leds, [50], 1, True, 1)
                 shared_btn_led_controller.set_data(self.btn_led)
-        
+
         screen.blit(self.bg, (0, 0))
 
         if users.current_user != None:
-            number = rotate(self.number_font.render(str(users.current_user["toasts"]), True, (255,255,255)))
+            toasts = users.lisse_toasts if users.current_user["name"] == "Lisse Spexlund" else users.current_user["toasts"]
+            number = rotate(self.number_font.render(str(toasts), True, (255,255,255)))
             number_rect = number.get_rect(center=self.number_pos)
             screen.blit(number, number_rect)
 
