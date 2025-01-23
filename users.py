@@ -1,4 +1,5 @@
 import json
+import time
 
 try:
     with open("data.json") as f:
@@ -33,6 +34,7 @@ def increment_toast():
     if current_user == None:
         return
     current_user["toasts"] += 1
+    current_user["toastDates"].append(time.time())
     total_toast += 1
     if current_user["name"] == "Lisse Spexlund":
         lisse_toasts += 1
