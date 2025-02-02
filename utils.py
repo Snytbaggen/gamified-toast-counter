@@ -1,5 +1,6 @@
 import pygame
 from common import IS_RPI, Window, NavigationDestination, SystemEvents
+from leds import Color
 
 class Icon():
     def __init__(self, path, center, destination: NavigationDestination = None):
@@ -66,3 +67,16 @@ def drawOutline(
     textSurf.blit(innerText, innerText.get_rect(center = textRect.center))
     textRect.center = textCenter
     screen.blit(textSurf, textRect)
+
+def colorWheel(pos) -> Color:
+    # Input a value 0 to 255 to get a color value.
+    # The colours are a transition r - g - b - back to r.
+    if pos < 0 or pos > 255:
+        return Color(0, 0, 0)
+    if pos < 85:
+        return Color(int(255 - pos * 3), int(pos * 3), 0)
+    if pos < 170:
+        pos -= 85
+        return Color(0, int(255 - pos * 3), int(pos * 3))
+    pos -= 170
+    return Color(int(pos * 3), 0, int(255 - pos * 3))

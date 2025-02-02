@@ -111,7 +111,10 @@ class UserScreen(GameScreen):
 
         self.bg = loadSprite("./sprites/scr_toastcounter.png")
         self.btn_audio = loadSound("./audio/btn_4.wav")
-        self.leds = [Color(0, 130, 202)] * 16
+        self.leds = [Color(0, 0, 0)] * 16
+        for i in range(len(self.leds)):
+            self.leds[i] = colorWheel(i * (255 / 16))
+        print(self.leds)
         self.btn_led = [255]
         self.led_counter = 0
 
