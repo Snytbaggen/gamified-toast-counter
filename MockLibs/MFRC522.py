@@ -97,6 +97,7 @@ class MFRC522():
 
     def __init__(self):
         self.mock_id = ""
+        self.antenna_on = True
         pass
 
     def MFRC522_Request(self, reqMode):
@@ -107,9 +108,16 @@ class MFRC522():
         return self.MFRC522_Request(1)
 
     def MFRC522_Read(self, blockAddr):
-        buf = bytes.fromhex(self.mock_id)
-        self.mock_id = ""
-        return buf
+        if self.antenna_on:
+            buf = bytes.fromhex(self.mock_id)
+            self.mock_id = ""
+            return buf
     
     def SetMockId(self, id):
         self.mock_id = id
+    
+    def AntennaOn(self):
+        self.antenna_on = True
+    
+    def AntennaOff(self):
+        self.antenna_on = False

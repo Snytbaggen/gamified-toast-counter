@@ -28,6 +28,7 @@ LED_CHANNEL = 0
 
 button_state = False if IS_RPI else True
 nfc = MFRC522()
+nfc.AntennaOff()
 
 def init():
     global leds, btn_led
@@ -52,6 +53,14 @@ def read_button():
         button_state = new_state
         if button_state:
             pygame.event.post(pygame.event.Event(IOEvents.EVENT_BUTTON_PRESS))
+
+def enable_nfc():
+    global nfc
+    nfc.AntennaOn()
+
+def disable_nfc():
+    global nfc
+    nfc.AntennaOff()
 
 def check_nfc():
     global nfc

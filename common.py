@@ -32,3 +32,4 @@ class NavigationDestination():
     NEW_USER = 5
     EXTRA = 6
     GAMES = 7
+    LOGIN = 8

@@ -1,6 +1,6 @@
 from common import NavigationDestination
 from gamescreen import GameScreen
-from MainMenu import startscreen, userscreen, extrascreen, settingsscreen
+from MainMenu import startscreen, userscreen, extrascreen, settingsscreen, loginscreen
 from FlappyToast import flappytoast
 
 stack = []
@@ -19,6 +19,7 @@ def navigate(dest: NavigationDestination, args):
     match dest:
         case NavigationDestination.BACK:
             if len(stack) > 1:
+                current().teardown()
                 stack.pop()
         case NavigationDestination.HOME:
             stack = stack[:1]
@@ -32,3 +33,5 @@ def navigate(dest: NavigationDestination, args):
             stack.append(extrascreen.ExtraScreen())
         case NavigationDestination.SETTINGS:
             stack.append(settingsscreen.SettingsScreen())
+        case NavigationDestination.LOGIN:
+            stack.append(loginscreen.LoginScreen())

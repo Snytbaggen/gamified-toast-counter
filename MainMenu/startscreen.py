@@ -12,8 +12,9 @@ class StartScreen(GameScreen):
 
     def __init__(self):
         self.font = pygame.font.Font('fonts/gillies.ttf', 240)
-        self.bg = loadSprite("./sprites/menu_home.png")
+        self.bg = loadSprite("./sprites/scr_home_login.png")
         self.btn_audio = loadSound("./audio/err_1.wav")
+        self.btn_click = loadSound("./audio/click.wav")
         self.leds = [Color(255, 0, 0)] * 16
         self.btn_led = [255]
         self.led_counter = 0
@@ -24,6 +25,10 @@ class StartScreen(GameScreen):
             Icon("sprites/ic_controller.png", (656, (Window.HEIGHT / 2) + 122), NavigationDestination.GAMES)
         ]
         self.high_score_font = pygame.font.Font('fonts/baloo.ttf', 34)
+
+        self.btn_login = loadSprite("sprites/btn_login.png", True)
+        btn_login_pos = (735, (Window.HEIGHT / 2))
+        self.btn_login_rect = self.btn_login.get_rect(center = btn_login_pos)
 
     def tick(self, screen, events):
         screen.blit(self.bg, (0, 0))
@@ -36,6 +41,9 @@ class StartScreen(GameScreen):
         for e in events:
             if e.type == pygame.MOUSEBUTTONDOWN:
                 pos = e.pos
+                if checkPointCollision(self.btn_login_rect, pos):
+                    self.btn_click.play()
+                    pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.LOGIN}))
                 for ic in self.icons:
                     ic.check_press(pos)
             if e.type == IOEvents.EVENT_BUTTON_PRESS:
@@ -55,3 +63,4 @@ class StartScreen(GameScreen):
         screen.blit(text, text_rect)
         for ic in self.icons:
             ic.draw(screen)
+        screen.blit(self.btn_login, self.btn_login_rect)
