@@ -19,6 +19,7 @@ def navigate(dest: NavigationDestination, args):
     match dest:
         case NavigationDestination.BACK:
             if len(stack) > 1:
+                current().teardown()
                 stack.pop()
         case NavigationDestination.HOME:
             stack = stack[:1]

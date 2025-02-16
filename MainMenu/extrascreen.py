@@ -19,17 +19,21 @@ class ExtraScreen(GameScreen):
         btn_back_pos = (705, Window.HEIGHT / 2)
         self.btn_back_rect = self.btn_back.get_rect(center=btn_back_pos)
 
-        self.leds = [Color(0, 130, 202)] * 16
-        self.btn_led = [255]
-        self.led_counter = 0
+        leds = [Color(0, 130, 202)] * 16
+        for i in range(len(leds)):
+            leds[i] = colorWheel(i * (255 / 16))
+        btn_led = [255, 0]
+
+        shared_led_controller.set_data(leds, leds, [50], 1, True, 1)
+        shared_btn_led_controller.set_data(btn_led, step_delay=20)
+
+        self.audio_loop = loadSound("./audio/caramell_loop.wav")
+        self.audio_loop.play(-1)
+
+    def teardown(self):
+        self.audio_loop.stop()
 
     def tick(self, screen, events):
-        # Check LEDS
-        if (self.led_counter > 0):
-            self.led_counter -= 1
-        else:
-            shared_led_controller.clear()
-            shared_btn_led_controller.clear()
         
         # Check events
         for e in events:
@@ -41,8 +45,7 @@ class ExtraScreen(GameScreen):
             if e.type == IOEvents.EVENT_BUTTON_PRESS:
                 self.led_counter = 20
                 self.btn_audio.play()
-                shared_led_controller.set_data(self.leds, self.leds, [50], 1, True, 1)
-                shared_btn_led_controller.set_data(self.btn_led)
+                
 
         # Draw to screen
         screen.blit(self.bg, (0, 0))

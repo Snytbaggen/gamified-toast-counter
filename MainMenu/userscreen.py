@@ -1,5 +1,6 @@
 import pygame
 import users
+import random
 from keyboard import Keyboard
 from gamescreen import GameScreen
 from utils import *
@@ -112,18 +113,22 @@ class UserScreen(GameScreen):
         self.bg = loadSprite("./sprites/scr_toastcounter.png")
         self.btn_audio = loadSound("./audio/btn_4.wav")
         self.leds = [Color(0, 0, 0)] * 16
+        self.btn_sounds = [
+            loadSound("./audio/caramell_1.wav"),
+            loadSound("./audio/caramell_2.wav"),
+            loadSound("./audio/caramell_3.wav")
+        ]
+
         for i in range(len(self.leds)):
             self.leds[i] = colorWheel(i * (255 / 16))
-        print(self.leds)
-        self.btn_led = [255]
-        self.led_counter = 0
+        self.btn_led = [255, 0]
 
     def tick(self, screen, events):
-        if (self.led_counter > 0):
-            self.led_counter -= 1
-        else:
+        sound_playing = pygame.mixer.get_busy()
+        if not sound_playing:
             shared_led_controller.clear()
             shared_btn_led_controller.clear()
+
         for e in events:
             if e.type == pygame.MOUSEBUTTONDOWN:
                 pos = e.pos
@@ -133,10 +138,10 @@ class UserScreen(GameScreen):
                     pygame.event.post(pygame.event.Event(SystemEvents.NAVIGATE, {"dest": NavigationDestination.BACK}))
             if e.type == IOEvents.EVENT_BUTTON_PRESS:
                 users.increment_toast()
-                self.led_counter = 20
-                self.btn_audio.play()
+                random.choice(self.btn_sounds).play()
+                
                 shared_led_controller.set_data(self.leds, self.leds, [50], 1, True, 1)
-                shared_btn_led_controller.set_data(self.btn_led)
+                shared_btn_led_controller.set_data(self.btn_led, step_delay=20)
 
         screen.blit(self.bg, (0, 0))
 

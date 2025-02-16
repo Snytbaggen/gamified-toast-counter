@@ -8,3 +8,6 @@ class GameScreen:
 
     def tick(self, screen: pygame.Surface, events: List[pygame.event.Event]):
         pass
+
+    def teardown(self):
+        pass
